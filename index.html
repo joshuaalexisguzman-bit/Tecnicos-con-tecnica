@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Exámenes Cecyt 5 "Benito Juárez"</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="brand">
+                <a href="index.html" id="logo-link" aria-label="Ir al inicio">
+                    <svg id="site-logo" width="40" height="40" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo">
+                        <defs>
+                            <linearGradient id="g" x1="0" x2="1">
+                                <stop offset="0" stop-color="#6a3fb5" />
+                                <stop offset="1" stop-color="#9b59ff" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="128" height="128" rx="16" fill="url(#g)" />
+                        <text x="50%" y="54%" font-family="Arial, sans-serif" font-size="56" fill="#fff" font-weight="700" text-anchor="middle" dominant-baseline="middle">E</text>
+                        <text x="50%" y="78%" font-family="Arial, sans-serif" font-size="14" fill="rgba(255,255,255,0.9)" text-anchor="middle">Sim</text>
+                    </svg>
+                </a>
+                <h1>Inicio</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html" rel="noopener">Inicio</a></li>
+                    <li><a href="grupo.html" rel="noopener">Sugerencias</a></li>
+                    <li><a href="sobre.html" rel="noopener">Sobre Nosotros</a></li>
+                    <li><a href="perfil.html" rel="noopener">Perfil</a></li>
+                    <li><button id="theme-toggle" aria-label="Cambiar tema">☀️</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="simulador container">
+        <div class="seccion">
+            <h3>Semestre</h3>
+            <label for="semestre">Semestre:</label>
+            <select id="semestre" name="semestre" aria-label="Semestre">
+                <option value="" disabled selected>Seleccione el semestre</option>
+                <option value="1">1er Semestre</option>
+                <option value="2">2do Semestre</option>
+                <option value="3">3er Semestre</option>
+                <option value="4">4to Semestre</option>
+                <option value="5">5to Semestre</option>
+            </select>
+        </div>
+
+        <div class="seccion">
+            <h3>Materias de Exámenes</h3>
+            <label for="materia">Materia:</label>
+            <select id="materia" name="materia" aria-label="Materia de examen">
+                <option value="" disabled selected>Selecciona tu materia</option>
+            </select>
+        </div>
+
+        <div class="seccion">
+            <h3>Registro de Exámenes</h3>
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-bottom:8px;">
+                <button id="clear-results-btn" class="btn" title="Eliminar últimos resultados mostrados">Borrar resultados</button>
+            </div>
+            <table id="results-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Examen</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Resultados</th>
+                    </tr>
+                </thead>
+                <tbody id="results-body">
+                    <!-- se rellenará dinámicamente con los últimos 3 resultados -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Sugerencias section removed per request -->
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Simulador de Exámenes Cecyt 5 "Benito Juárez".</p>
+        </div>
+    </footer>
+    <script src="auth.js"></script>
+    <script src="theme.js"></script>
+    <script>
+        // Definir materias por semestre
+        const materiasPorSemestre = {
+            '1': [
+                    { value: 'algebra', label: 'Álgebra' },
+                    { value: 'ingles1', label: 'Inglés I' }
+                ],
+            '2': [
+                { value: 'geometria_trigonometria', label: 'Geometría y Trigonometría' },
+                { value: 'historia_mexico', label: 'Historia de México contemporáneo' }
+            ],
+            '3': [
+                { value: 'geometria_analitica', label: 'Geometría Analítica' },
+                { value: 'fisica1', label: 'Física I' }
+            ],
+            '4': [
+                { value: 'contabilidad', label: 'Contabilidad' },
+                { value: 'derecho', label: 'Derecho' }
+            ],
+            '5': [
+                { value: 'derecho_mercantil', label: 'Derecho Mercantil' },
+                { value: 'microeconomia', label: 'Microeconomía' }
+            ],
+            '6': [
+                { value: '', label: 'No disponible por el momento', disabled: true }
+            ]
+        };
+        // Al cambiar el semestre, actualizar las materias
+        document.getElementById('semestre').addEventListener('change', function(){
+            const semestre = this.value;
+            const materiaSelect = document.getElementById('materia');
+            materiaSelect.innerHTML = '';
+            
+            if(!semestre || !materiasPorSemestre[semestre]){
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.disabled = true;
+                defaultOption.selected = true;
+                defaultOption.textContent = 'Selecciona tu materia';
+                materiaSelect.appendChild(defaultOption);
+                return;
+            }
+
+            const list = materiasPorSemestre[semestre];
+            // Si el semestre está marcado como no disponible, mostrar solo el mensaje
+            if(semestre === '6'){
+                list.forEach(materia => {
+                    const option = document.createElement('option');
+                    option.value = materia.value || '';
+                    option.textContent = materia.label;
+                    option.disabled = materia.disabled === true;
+                    option.selected = true;
+                    materiaSelect.appendChild(option);
+                });
+                return;
+            }
+
+            // Para semestres normales, agregar opción por defecto y las materias disponibles
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            defaultOption.textContent = 'Selecciona tu materia';
+            materiaSelect.appendChild(defaultOption);
+
+            list.forEach(materia => {
+                const option = document.createElement('option');
+                option.value = materia.value;
+                option.textContent = materia.label;
+                if(materia.disabled) option.disabled = true;
+                materiaSelect.appendChild(option);
+            });
+        });
+
+        // Al seleccionar una materia, abrir quiz.html en nueva pestaña con la materia como parámetro
+        (function(){
+            const sel = document.getElementById('materia');
+            if(!sel) return;
+            sel.addEventListener('change', function(){
+                const val = this.value;
+                if(!val) return;
+                const url = 'quiz.html?materia=' + encodeURIComponent(val);
+                window.open(url, '_blank');
+                // opcional: resetear selección
+                this.selectedIndex = 0;
+            });
+        })();
+    </script>
+    <script>
+        // Renderizar los últimos 3 resultados en la tabla
+        (function(){
+            function formatDate(iso){
+                try{
+                    const d = new Date(iso);
+                    return d.toLocaleString();
+                }catch(e){ return iso; }
+            }
+            function render(){
+                try{
+                    const user = sessionStorage.getItem('user') || localStorage.getItem('user') || null;
+                    const key = user ? ('quizResults_' + user) : 'quizResults_guest';
+                    const indexCacheKey = user ? ('quizResults_indexCache_' + user) : 'quizResults_indexCache_guest';
+
+                    // Prefer the index-specific cache so clearing on inicio does not affect profile
+                    let rawCache = localStorage.getItem(indexCacheKey);
+                    let arr = [];
+                    if(rawCache !== null){
+                        arr = rawCache ? JSON.parse(rawCache) : [];
+                    } else {
+                        // build cache from main storage: take last 3
+                        const raw = localStorage.getItem(key);
+                        const full = raw ? JSON.parse(raw) : [];
+                        const last = full.slice(-3);
+                        arr = last;
+                        localStorage.setItem(indexCacheKey, JSON.stringify(arr));
+                    }
+
+                    const body = document.getElementById('results-body');
+                    if(!body) return;
+                    body.innerHTML = '';
+                    const last = arr.slice().reverse();
+                    if(last.length === 0){
+                        // mostrar filas vacías
+                        for(let i=0;i<3;i++){
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = '<td>-</td><td>-</td><td>-</td>';
+                            body.appendChild(tr);
+                        }
+                        return;
+                    }
+                    last.forEach(item => {
+                        const tr = document.createElement('tr');
+                        const exam = document.createElement('td'); exam.textContent = item.materia;
+                        const date = document.createElement('td'); date.textContent = formatDate(item.date);
+                        const res = document.createElement('td'); res.textContent = item.correct + ' / ' + item.total;
+                        tr.appendChild(exam); tr.appendChild(date); tr.appendChild(res);
+                        body.appendChild(tr);
+                    });
+                    // si hay menos de 3, completar con filas vacías
+                    for(let i=last.length;i<3;i++){
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = '<td>-</td><td>-</td><td>-</td>';
+                        body.appendChild(tr);
+                    }
+                }catch(e){ console.error(e); }
+            }
+            // Exponer la función de renderizado para que otros scripts puedan forzar actualización
+            window.renderResults = render;
+            // render inicial
+            render();
+            // opcional: re-render periódicamente si se hacen examenes en otra pestaña
+            setInterval(render, 2000);
+        })();
+        // Botón para borrar los últimos resultados mostrados EN LA PÁGINA DE INICIO
+        // This only clears the index-specific cache so the profile view is unaffected.
+        (function(){
+            const btn = document.getElementById('clear-results-btn');
+            if(!btn) return;
+            btn.addEventListener('click', function(){
+                const user = sessionStorage.getItem('user') || localStorage.getItem('user') || null;
+                const key = user ? ('quizResults_' + user) : 'quizResults_guest';
+                const indexCacheKey = user ? ('quizResults_indexCache_' + user) : 'quizResults_indexCache_guest';
+                const rawMain = localStorage.getItem(key);
+                const arrMain = rawMain ? JSON.parse(rawMain) : [];
+                if(arrMain.length === 0){
+                    alert('No hay resultados para borrar.');
+                    return;
+                }
+                if(!confirm('¿Eliminar los resultados mostrados en la tabla (inicio)? Esta acción solo afectará la vista de inicio y no borrará el historial completo.')) return;
+                // Set an empty array in the index cache to clear the home table only
+                localStorage.setItem(indexCacheKey, JSON.stringify([]));
+                if(window.renderResults) window.renderResults();
+            });
+            // If the main quiz results change, invalidate the index cache so it reflects new data
+            window.addEventListener('storage', function(e){
+                if(!e.key) return;
+                const user = sessionStorage.getItem('user') || localStorage.getItem('user') || null;
+                const mainKey = user ? ('quizResults_' + user) : 'quizResults_guest';
+                const indexCacheKey = user ? ('quizResults_indexCache_' + user) : 'quizResults_indexCache_guest';
+                if(e.key === mainKey){
+                    try{ localStorage.removeItem(indexCacheKey); }catch(err){}
+                    if(window.renderResults) window.renderResults();
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
