@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sugerencias - Cecyt 5 "Benito Juárez"</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilos específicos para la página de Sugerencias */
+        .sugerencias-container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .sugerencias-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .sugerencias-header h2 {
+            font-size: 2.2em;
+            color: var(--color-primary);
+            margin: 0;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .plan-estudios-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.05em;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .plan-estudios-btn:hover {
+            background-color: var(--color-primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(75, 31, 122, 0.3);
+        }
+
+        .plan-estudios-icon {
+            font-size: 1.4em;
+        }
+
+        .conocerte {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 6px 18px rgba(2, 6, 12, 0.35);
+        }
+
+        .conocerte h3 {
+            font-family: Arial, sans-serif;
+            color: var(--color-primary);
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            text-align: left;
+            border-bottom: 2px solid var(--color-primary);
+            padding-bottom: 12px;
+        }
+
+        .pregunta {
+            margin-bottom: 30px;
+        }
+
+        .pregunta h4 {
+            font-family: Arial, sans-serif;
+            color: var(--color-primary);
+            font-size: 1.15em;
+            margin-bottom: 15px;
+            margin-top: 0;
+        }
+
+        .grupos-opciones {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            padding: 15px;
+            background-color: rgba(75, 31, 122, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .grupo-opcion {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95em;
+        }
+
+        .grupo-opcion input[type="radio"],
+        .grupo-opcion input[type="checkbox"] {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--color-primary);
+        }
+
+        .grupo-opcion label {
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+            color: var(--text);
+            margin: 0;
+        }
+
+        .pregunta-abierta {
+            margin-bottom: 30px;
+        }
+
+        .pregunta-abierta textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: Arial, sans-serif;
+            font-size: 0.95em;
+            resize: vertical;
+            min-height: 100px;
+            box-sizing: border-box;
+            background-color: var(--card-bg);
+            color: var(--text);
+        }
+
+        .pregunta-abierta textarea:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: -1px;
+        }
+
+        /* Dark-mode overrides to keep orange accents in dark theme */
+        .dark .sugerencias-header h2 { color: #b7abec; }
+        .dark .conocerte h3 { color: #b7abec; border-bottom-color: #b7abec; }
+        .dark .pregunta h4 { color: #b7abec; }
+        .dark .pregunta-abierta textarea:focus { outline-color: #b7abec; }
+
+        .btn-enviar {
+            display: block;
+            margin: 40px auto 0;
+            padding: 12px 32px;
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-family: Arial, sans-serif;
+            font-size: 1.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-enviar:hover {
+            background-color: var(--color-primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(75, 31, 122, 0.3);
+        }
+
+        /* Dark mode adjustments */
+        .dark .conocerte {
+            background-color: var(--card-bg);
+            box-shadow: 0 6px 20px rgba(2, 6, 12, 0.55);
+        }
+
+        .dark .grupos-opciones {
+            background-color: rgba(224, 40, 169, 0.02);
+            border: 1px solid var(--border);
+        }
+
+        .dark .pregunta h4,
+        .dark .conocerte h3 {
+            color: var(--text);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .dark .grupo-opcion label {
+            color: var(--text);
+        }
+
+        .dark .pregunta-abierta textarea {
+            background-color: var(--card-bg);
+            color: var(--text);
+            border-color: var(--border);
+        }
+
+        .dark .pregunta-abierta textarea:focus {
+            outline-color: var(--color-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sugerencias-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .sugerencias-header h2 {
+                text-align: center;
+            }
+
+            .plan-estudios-btn {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .grupos-opciones {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 10px;
+                padding: 12px;
+            }
+
+            .conocerte {
+                padding: 20px;
+            }
+
+            .sugerencias-container {
+                margin: 20px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="brand">
+                <a href="index.html" id="logo-link" aria-label="Ir al inicio">
+                    <svg id="site-logo" width="40" height="40" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo">
+                        <defs>
+                            <linearGradient id="g" x1="0" x2="1">
+                                <stop offset="0" stop-color="#6a3fb5" />
+                                <stop offset="1" stop-color="#9b59ff" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="128" height="128" rx="16" fill="url(#g)" />
+                        <text x="50%" y="54%" font-family="Arial, sans-serif" font-size="56" fill="#fff" font-weight="700" text-anchor="middle" dominant-baseline="middle">E</text>
+                        <text x="50%" y="78%" font-family="Arial, sans-serif" font-size="14" fill="rgba(255,255,255,0.9)" text-anchor="middle">Sim</text>
+                    </svg>
+                </a>
+                <h1>Sugerencias</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html" rel="noopener">Inicio</a></li>
+                    <li><a href="sugerencias.html" rel="noopener">Sugerencias</a></li>
+                    <li><a href="sobre.html" rel="noopener">Sobre Nosotros</a></li>
+                    <li><a href="perfil.html" rel="noopener">Perfil</a></li>
+                    <li><button id="theme-toggle" aria-label="Cambiar tema">☀️</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="sugerencias-container">
+        <div class="sugerencias-header">
+            <h2>Ayúdanos a conocerte mejor</h2>
+            <a href="https://ipncecyt5.wordpress.com/" target="_blank" rel="noopener noreferrer" class="plan-estudios-btn" title="Abrir Plan de Estudios Cecyt 5 (nuevo tab)">
+                <span class="plan-estudios-icon" aria-hidden="true">📚</span>
+                <span>Plan de Estudios</span>
+            </a>
+        </div>
+
+        <section class="conocerte">
+            <!-- Pregunta 1: Selección de grupo -->
+            <h3>Información General</h3>
+
+            <div class="pregunta">
+                <h4>1. ¿De qué grupo eres?</h4>
+                <div class="grupos-opciones">
+                    <!-- 1IV -->
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="1IV01" value="1IV01"><label for="1IV01">1IV01</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="1IV02" value="1IV02"><label for="1IV02">1IV02</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="1IV03" value="1IV03"><label for="1IV03">1IV03</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="1IV04" value="1IV04"><label for="1IV04">1IV04</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="1IV05" value="1IV05"><label for="1IV05">1IV05</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="1IV06" value="1IV06"><label for="1IV06">1IV06</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="1IV07" value="1IV07"><label for="1IV07">1IV07</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="1IV08" value="1IV08"><label for="1IV08">1IV08</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="1IV09" value="1IV09"><label for="1IV09">1IV09</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="1IV10" value="1IV10"><label for="1IV10">1IV10</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="1IV11" value="1IV11"><label for="1IV11">1IV11</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="1IV12" value="1IV12"><label for="1IV12">1IV12</label></div>
+                    
+                    <!-- 2IV -->
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="2IV01" value="2IV01"><label for="2IV01">2IV01</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="2IV02" value="2IV02"><label for="2IV02">2IV02</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="2IV03" value="2IV03"><label for="2IV03">2IV03</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="2IV04" value="2IV04"><label for="2IV04">2IV04</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="2IV05" value="2IV05"><label for="2IV05">2IV05</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="2IV06" value="2IV06"><label for="2IV06">2IV06</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="2IV07" value="2IV07"><label for="2IV07">2IV07</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="2IV08" value="2IV08"><label for="2IV08">2IV08</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="2IV09" value="2IV09"><label for="2IV09">2IV09</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="2IV10" value="2IV10"><label for="2IV10">2IV10</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="2IV11" value="2IV11"><label for="2IV11">2IV11</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="2IV12" value="2IV12"><label for="2IV12">2IV12</label></div>
+                    
+                    <!-- 3IV -->
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="3IV01" value="3IV01"><label for="3IV01">3IV01</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="3IV02" value="3IV02"><label for="3IV02">3IV02</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="3IV03" value="3IV03"><label for="3IV03">3IV03</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="3IV04" value="3IV04"><label for="3IV04">3IV04</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="3IV05" value="3IV05"><label for="3IV05">3IV05</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="3IV06" value="3IV06"><label for="3IV06">3IV06</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="3IV07" value="3IV07"><label for="3IV07">3IV07</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="3IV08" value="3IV08"><label for="3IV08">3IV08</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="3IV09" value="3IV09"><label for="3IV09">3IV09</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="3IV10" value="3IV10"><label for="3IV10">3IV10</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="3IV11" value="3IV11"><label for="3IV11">3IV11</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="3IV12" value="3IV12"><label for="3IV12">3IV12</label></div>
+                    
+                    <!-- 4IV -->
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="4IV01" value="4IV01"><label for="4IV01">4IV01</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="4IV02" value="4IV02"><label for="4IV02">4IV02</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="4IV03" value="4IV03"><label for="4IV03">4IV03</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="4IV04" value="4IV04"><label for="4IV04">4IV04</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="4IV05" value="4IV05"><label for="4IV05">4IV05</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="4IV06" value="4IV06"><label for="4IV06">4IV06</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="4IV07" value="4IV07"><label for="4IV07">4IV07</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="4IV08" value="4IV08"><label for="4IV08">4IV08</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="4IV09" value="4IV09"><label for="4IV09">4IV09</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="4IV10" value="4IV10"><label for="4IV10">4IV10</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="4IV11" value="4IV11"><label for="4IV11">4IV11</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="4IV12" value="4IV12"><label for="4IV12">4IV12</label></div>
+                    
+                    <!-- 5IV -->
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="5IV01" value="5IV01"><label for="5IV01">5IV01</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="5IV02" value="5IV02"><label for="5IV02">5IV02</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="5IV03" value="5IV03"><label for="5IV03">5IV03</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="5IV04" value="5IV04"><label for="5IV04">5IV04</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="5IV05" value="5IV05"><label for="5IV05">5IV05</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="5IV06" value="5IV06"><label for="5IV06">5IV06</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="5IV07" value="5IV07"><label for="5IV07">5IV07</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="5IV08" value="5IV08"><label for="5IV08">5IV08</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="5IV09" value="5IV09"><label for="5IV09">5IV09</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="5IV10" value="5IV10"><label for="5IV10">5IV10</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="5IV11" value="5IV11"><label for="5IV11">5IV11</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="grupo" id="5IV12" value="5IV12"><label for="5IV12">5IV12</label></div>
+                </div>
+            </div>
+
+            <!-- Pregunta 2: Frecuencia de uso -->
+            <div class="pregunta">
+                <h4>2. ¿Con qué frecuencia usas el simulador de exámenes?</h4>
+                <div class="grupos-opciones">
+                    <div class="grupo-opcion"><input type="radio" name="frecuencia" id="freq1" value="freq1"><label for="freq1">Cada día</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="frecuencia" id="freq2" value="freq2"><label for="freq2">Cada 2-3 días</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="frecuencia" id="freq3" value="freq3"><label for="freq3">Una vez a la semana</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="frecuencia" id="freq4" value="freq4"><label for="freq4">Cada 15 días</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="frecuencia" id="freq5" value="freq5"><label for="freq5">Pocas veces al mes</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="frecuencia" id="freq6" value="freq6"><label for="freq6">Solo cuando hay examen</label></div>
+                </div>
+            </div>
+
+            <!-- Pregunta 3: Materias complicadas (selección múltiple) -->
+            <div class="pregunta">
+                <h4>3. ¿Qué materias de tronco común se te complican más? (puedes elegir varias)</h4>
+                <div class="grupos-opciones">
+                    <div class="grupo-opcion"><input type="checkbox" name="materia-complicada" id="mat1" value="mat1"><label for="mat1">Calculo Integral</label></div>
+                    <div class="grupo-opcion"><input type="checkbox" name="materia-complicada" id="mat2" value="mat2"><label for="mat2">Inglés</label></div>
+                    <div class="grupo-opcion"><input type="checkbox" name="materia-complicada" id="mat3" value="mat3"><label for="mat3">Química</label></div>
+                    <div class="grupo-opcion"><input type="checkbox" name="materia-complicada" id="mat4" value="mat4"><label for="mat4">Orientacion juvenil</label></div>
+                    <div class="grupo-opcion"><input type="checkbox" name="materia-complicada" id="mat5" value="mat5"><label for="mat5">Historia de México</label></div>
+                    <div class="grupo-opcion"><input type="checkbox" name="materia-complicada" id="mat6" value="mat6"><label for="mat6">Biología</label></div>
+                    <div class="grupo-opcion"><input type="checkbox" name="materia-complicada" id="mat7" value="mat7"><label for="mat7">Filosofia</label></div>
+                    <div class="grupo-opcion"><input type="checkbox" name="materia-complicada" id="mat8" value="mat8"><label for="mat8">Logica</label></div>
+                    <div class="grupo-opcion"><input type="checkbox" name="materia-complicada" id="mat9" value="mat9"><label for="mat9">DHP</label></div>
+                    <div class="grupo-opcion"><input type="checkbox" name="materia-complicada" id="mat10" value="mat10"><label for="mat10">Tecnicas de incestigacion de campo</label></div>
+                    <div class="grupo-opcion"><input type="checkbox" name="materia-complicada" id="mat11" value="mat11"><label for="mat11">Expresion oral y Escrita</label></div>
+                    <div class="grupo-opcion"><input type="checkbox" name="materia-complicada" id="mat12" value="mat12"><label for="mat12">Ninguna me complica</label></div>
+                </div>
+            </div>
+
+            <!-- Pregunta 4: Tipo de exámenes -->
+            <div class="pregunta">
+                <h4>4. ¿Qué tipo de exámenes te gustan más realizar?</h4>
+                <div class="grupos-opciones">
+                    <div class="grupo-opcion"><input type="radio" name="tipo-examen" id="examen1" value="examen1"><label for="examen1">Simulacros generales</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="tipo-examen" id="examen2" value="examen2"><label for="examen2">Preguntas de desarrollo</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="tipo-examen" id="examen3" value="examen3"><label for="examen3">Preguntas de opción múltiple</label></div>
+                </div>
+            </div>
+
+            <!-- Pregunta 5: Nivel de dificultad -->
+            <div class="pregunta">
+                <h4>5. ¿Qué nivel de dificultad prefieres en los exámenes?</h4>
+                <div class="grupos-opciones">
+                    <div class="grupo-opcion"><input type="radio" name="dificultad" id="dif1" value="dif1"><label for="dif1">Bajo</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="dificultad" id="dif2" value="dif2"><label for="dif2">Medio-bajo</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="dificultad" id="dif3" value="dif3"><label for="dif3">Medio</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="dificultad" id="dif4" value="dif4"><label for="dif4">Medio-alto</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="dificultad" id="dif5" value="dif5"><label for="dif5">Alto</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="dificultad" id="dif6" value="dif6"><label for="dif6">Muy alto</label></div>
+                </div>
+            </div>
+
+            <!-- Pregunta 6: Motivo de uso -->
+            <div class="pregunta">
+                <h4>6. ¿Cuál es tu motivo principal para usar el simulador?</h4>
+                <div class="grupos-opciones">
+                    <div class="grupo-opcion"><input type="radio" name="motivo" id="mot1" value="mot1"><label for="mot1">Prepararme para exámenes finales</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="motivo" id="mot2" value="mot2"><label for="mot2">Repasar temas que no entiendo</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="motivo" id="mot3" value="mot3"><label for="mot3">Medir mi progreso semanal</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="motivo" id="mot4" value="mot4"><label for="mot4">Por tarea de la escuela</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="motivo" id="mot5" value="mot5"><label for="mot5">Solo por curiosidad</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="motivo" id="mot6" value="mot6"><label for="mot6">Para mejorar mi calificación</label></div>
+                    <div class="grupo-opcion"><input type="radio" name="motivo" id="mot7" value="mot7"><label for="mot7">Prepararme para el examen de ingreso</label></div>
+                </div>
+            </div>
+
+            <!-- Pregunta abierta: Comentarios o sugerencias -->
+            <div class="pregunta-abierta">
+                <h4>7. ¿Tienes algún comentario o sugerencia para mejorar el simulador?</h4>
+                <textarea id="comentarios" name="comentarios" placeholder="Cuéntanos tu opinión..."></textarea>
+            </div>
+
+            <button class="btn-enviar" onclick="guardarSugerencias()">Enviar Sugerencias</button>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Cecyt 5 "Benito Juárez" - Simulador de Exámenes</p>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="theme.js"></script>
+    <script>
+        // Función para guardar y enviar las sugerencias al servidor backend
+        // Limitador en cliente: máximo 10 envíos por hora
+        function guardarSugerencias() {
+            // Helpers para obtener el texto visible de las opciones
+            const getRadioText = (name) => {
+                const el = document.querySelector(`input[name="${name}"]:checked`);
+                if (!el) return null;
+                const label = el.nextElementSibling;
+                return label ? label.textContent.trim() : el.value;
+            };
+
+            const getCheckboxTexts = (name) => {
+                return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(el => {
+                    const label = el.nextElementSibling;
+                    return label ? label.textContent.trim() : el.value;
+                });
+            };
+
+            const grupo = document.querySelector('input[name="grupo"]:checked');
+            const grupoTexto = grupo ? (grupo.nextElementSibling ? grupo.nextElementSibling.textContent.trim() : grupo.value) : null;
+            const frecuenciaTexto = getRadioText('frecuencia');
+            const materiasComplicadasTextos = getCheckboxTexts('materia-complicada');
+            const tipoExamenTexto = getRadioText('tipo-examen');
+            const dificultadTexto = getRadioText('dificultad');
+            const motivoTexto = getRadioText('motivo');
+            const comentarios = document.getElementById('comentarios').value;
+            const usuarioEmail = sessionStorage.getItem('user') || localStorage.getItem('user') || 'No disponible';
+
+            // Validar que se ha seleccionado al menos el grupo
+            if (!grupo) {
+                alert('Por favor, selecciona tu grupo.');
+                return;
+            }
+
+            // Rate limiting (cliente): máximo 10 envíos en ventana de 1 hora
+            const MAX_PER_HOUR = 10;
+            const WINDOW_MS = 60 * 60 * 1000; // 1 hora
+            const now = Date.now();
+            let sendLog = JSON.parse(localStorage.getItem('sugerencias_send_log') || '[]');
+            // mantener sólo timestamps dentro de la ventana
+            sendLog = sendLog.filter(ts => now - ts < WINDOW_MS);
+            if (sendLog.length >= MAX_PER_HOUR) {
+                alert(`Has alcanzado el límite de envíos (${MAX_PER_HOUR}) por hora. Intenta más tarde.`);
+                return;
+            }
+
+            // Crear objeto con los datos
+            const dataSugerencias = {
+                grupo: grupoTexto || (grupo ? grupo.value : ''),
+                frecuencia: frecuenciaTexto,
+                materiasComplicadas: (materiasComplicadasTextos.length ? materiasComplicadasTextos.join(', ') : 'No especificadas'),
+                tipoExamen: tipoExamenTexto,
+                dificultad: dificultadTexto,
+                motivo: motivoTexto,
+                comentarios: comentarios,
+                fecha: new Date().toISOString(),
+                usuarioEmail: usuarioEmail
+            };
+
+            // Guardar en localStorage
+            let sugerencias = JSON.parse(localStorage.getItem('sugerencias') || '[]');
+            sugerencias.push(dataSugerencias);
+            localStorage.setItem('sugerencias', JSON.stringify(sugerencias));
+
+            // Mostrar indicador de carga
+            const btnEnviar = document.querySelector('.btn-enviar');
+            const textoOriginal = btnEnviar.textContent;
+            btnEnviar.textContent = 'Enviando...';
+            btnEnviar.disabled = true;
+
+            // Añadir timestamp al log antes de enviar (optimista)
+            sendLog.push(now);
+            localStorage.setItem('sugerencias_send_log', JSON.stringify(sendLog));
+
+            // Enviar al servidor backend
+            const API_URL = window.API_CONFIG ? window.API_CONFIG.BASE_URL : 'http://localhost:5000';
+            fetch(`${API_URL}/api/enviar-sugerencia`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    grupo: dataSugerencias.grupo,
+                    frecuencia: dataSugerencias.frecuencia || 'No especificada',
+                    materiasComplicadas: dataSugerencias.materiasComplicadas,
+                    tipoExamen: dataSugerencias.tipoExamen || 'No especificado',
+                    dificultad: dataSugerencias.dificultad || 'No especificada',
+                    motivo: dataSugerencias.motivo || 'No especificado',
+                    comentarios: dataSugerencias.comentarios || 'Sin comentarios',
+                    usuarioEmail: usuarioEmail,
+                    fecha: new Date().toLocaleString('es-ES')
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Sugerencia enviada exitosamente');
+                        alert('✓ Tu sugerencia se ha guardado y enviado correctamente por correo.');
+                    } else {
+                        console.error('Error:', data.error);
+                        alert('Sugerencia guardada localmente. (No se pudo enviar por correo ahora)');
+                    }
+                    limpiarYRedirigir(btnEnviar, textoOriginal);
+                })
+                .catch(error => {
+                    console.error('Error al conectar con el servidor:', error);
+                    alert('Sugerencia guardada localmente. Asegúrate de que el servidor está corriendo en puerto 5000.');
+                    limpiarYRedirigir(btnEnviar, textoOriginal);
+                });
+
+            function limpiarYRedirigir(btn, textoBtn) {
+                // Limpiar el formulario
+                document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(el => el.checked = false);
+                document.getElementById('comentarios').value = '';
+
+                // Restaurar botón
+                btn.textContent = textoBtn;
+                btn.disabled = false;
+
+                // Redirigir al inicio después de 2 segundos
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>
