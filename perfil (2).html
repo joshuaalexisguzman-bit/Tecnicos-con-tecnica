@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - Simulador Cecyt 5</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Page-specific adjustments using site variables */
+        .perfil-page-body { font-family: 'Arial', sans-serif; }
+        .perfil-page-body *, .perfil-page-body *::before, .perfil-page-body *::after { font-family: 'Arial', sans-serif !important; }
+        .perfil-card { background: var(--card-bg); border-radius: 10px; padding: 24px; box-shadow: 0 6px 18px rgba(2,6,12,0.12); color: var(--text); border: 2px solid var(--color-primary); }
+        .perfil-title { font-family: 'Permanent Marker', cursive; color: var(--color-primary); font-size: 1.8em; text-align: center; margin: 0 0 12px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: bold; }
+        .perfil-info { display:flex; flex-wrap:wrap; gap:20px; align-items:center; justify-content:center; }
+        .foto-perfil { width:130px; height:130px; border-radius:50%; background:var(--color-primary); display:flex; align-items:center; justify-content:center; color: #fff; font-size:1.5em; cursor:pointer; border: 4px solid var(--color-primary-dark); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .foto-perfil:hover { filter: brightness(0.9); transform: scale(1.05); }
+        .nombre-usuario label { display:block; color: var(--color-primary); margin-bottom:6px; font-weight: bold; font-size: 1.05em; }
+        .nombre-usuario input { width:100%; padding:10px 12px; border-radius:6px; border:2px solid var(--color-primary); background: var(--card-bg); color: var(--text); font-size: 1em; font-weight: 600; }
+        .nombre-usuario input::placeholder { color: var(--text); opacity: 0.6; }
+        .historial { background: var(--card-bg); padding: 16px; border-radius: 8px; border: 2px solid var(--color-primary); }
+        .historial h3 { color: var(--color-primary); font-family: 'Permanent Marker', cursive; margin: 0 0 12px 0; font-size: 1.3em; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .historial ul { list-style:none; padding:0; max-height:160px; overflow:auto; }
+        .historial li { padding:12px; border-bottom:2px solid var(--border); color: var(--text); font-weight: 500; background: var(--card-bg); }
+        .historial li:last-child { border-bottom: none; }
+        .historial li.placeholder { color: var(--color-primary); font-style: italic; padding: 20px; text-align: center; font-weight: 600; }
+        .frecuencia { background: var(--card-bg); padding:16px; border-radius:8px; border:2px solid var(--color-primary); }
+        .frecuencia p { color: var(--text); font-weight: 600; margin: 12px 0; font-size: 1.05em; line-height: 1.6; }
+        .uso h3 { color: var(--color-primary); font-family: 'Permanent Marker', cursive; margin-top:20px; margin-bottom: 12px; font-size: 1.3em; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .btn { padding:12px 24px; background:var(--color-primary); color: #fff; border:none; border-radius:6px; cursor:pointer; font-weight: 600; font-size: 1.05em; margin: 8px; transition: all 0.3s; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .btn:hover { background: var(--color-primary-dark); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.3); }
+        .botones-contenedor { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 22px; }
+        @media(max-width:768px){ .perfil-info{flex-direction:column;} .botones-contenedor { flex-direction: column; } }
+        /* Dark mode fixes */
+        .dark .perfil-card { background: var(--card-bg); color: var(--text); box-shadow: 0 6px 20px rgba(0,0,0,0.55); border: 2px solid var(--color-primary); }
+        .dark .historial li { background: var(--card-bg); color: var(--text); border-bottom-color: var(--color-primary); }
+        .dark .nombre-usuario input { background: var(--card-bg); color: var(--text); border-color: var(--color-primary); }
+        /* En modo oscuro, forzar los títulos y botones a naranja para mantener contraste */
+        .dark .perfil-title { color: #b7abec; }
+        .dark .nombre-usuario label { color: #b7abec; }
+        .dark .historial h3 { color: #b7abec !important; }
+        .dark .historial li.placeholder { color: #b7abec !important; }
+        .dark .uso h3 { color: #b7abec !important; }
+        .dark #preview-modal h3 { color: #b7abec !important; }
+        .dark #close-view { background: #b7abec !important; }
+        .dark #confirm-photo { background: #b7abec !important; }
+        .dark #camera-btn { background: #3b3166 !important; }
+    </style>
+</head>
+<body class="perfil-page-body">
+    <header>
+        <div class="container">
+            <div class="brand">
+                <a href="index.html" id="logo-link" aria-label="Ir al inicio">
+                    <svg id="site-logo" width="40" height="40" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo">
+                        <defs>
+                            <linearGradient id="g" x1="0" x2="1">
+                                <stop offset="0" stop-color="#6a3fb5" />
+                                <stop offset="1" stop-color="#9b59ff" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="128" height="128" rx="16" fill="url(#g)" />
+                        <text x="50%" y="54%" font-family="Arial, sans-serif" font-size="56" fill="#fff" font-weight="700" text-anchor="middle" dominant-baseline="middle">E</text>
+                        <text x="50%" y="78%" font-family="Arial, sans-serif" font-size="14" fill="rgba(255,255,255,0.9)" text-anchor="middle">Sim</text>
+                    </svg>
+                </a>
+                <h1>Perfil</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html" rel="noopener">Inicio</a></li>
+                    <li><a href="sugerencias.html" rel="noopener">Sugerencias</a></li>
+                    <li><a href="sobre.html" rel="noopener">Sobre Nosotros</a></li>
+                    <li><a href="perfil.html" rel="noopener">Perfil</a></li>
+                    <li><button id="theme-toggle" aria-label="Cambiar tema">☀️</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div id="view-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:999; justify-content:center; align-items:center;">
+        <div style="position:relative; max-width:90%; max-height:90%;">
+            <img id="view-img" src="" style="width:100%; height:100%; object-fit:contain; border-radius:8px;" />
+            <button id="close-view" style="position:absolute; top:-15px; right:-15px; width:50px; height:50px; border-radius:50%; background:var(--color-primary); border:3px solid white; font-size:2em; cursor:pointer; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; box-shadow:0 4px 12px rgba(0,0,0,0.4); transition:all 0.2s;">✕</button>
+        </div>
+    </div>
+
+    <div id="preview-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; justify-content:center; align-items:center;">
+        <div style="background:var(--card-bg); padding:30px; border-radius:12px; text-align:center; max-width:400px; border: 3px solid var(--color-primary); box-shadow: 0 8px 24px rgba(0,0,0,0.4);">
+            <h3 style="color:var(--color-primary); font-family:'Permanent Marker', cursive; margin-top:0; font-size: 1.5em; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">Vista Previa de Foto</h3>
+            <img id="preview-img" src="" style="width:200px; height:200px; border-radius:50%; object-fit:cover; margin:20px 0; border: 4px solid var(--color-primary);" />
+            <div style="display:flex; gap:10px; justify-content:center;">
+                <button id="confirm-photo" style="padding:12px 20px; background:var(--color-primary); color:white; border:none; border-radius:6px; cursor:pointer; font-family:'Arial', sans-serif; font-size:1em; font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">Confirmar</button>
+                <button id="cancel-photo" style="padding:12px 20px; background:var(--border); color:var(--text); border:none; border-radius:6px; cursor:pointer; font-family:'Arial', sans-serif; font-size:1em; font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="container">
+        <section class="perfil-card">
+            <h2 class="perfil-title">Mi Perfil</h2>
+            <div class="perfil-info">
+                <div style="position:relative; width:130px; height:130px;">
+                    <div id="foto-perfil" class="foto-perfil" style="cursor:default;" title="Tu foto de perfil">FT</div>
+                    <button id="camera-btn" style="position:absolute; bottom:0; right:0; width:40px; height:40px; border-radius:50%; background:var(--color-primary); border:none; color:white; font-size:1.3em; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.2); transition:all 0.3s;">📷</button>
+                    <input type="file" id="foto-input" accept="image/*" style="display:none;">
+                </div>
+                <div class="nombre-usuario">
+                    <label for="usuario">Nombre de Usuario</label>
+                    <input type="text" id="usuario" placeholder="Tu nombre de usuario" readonly>
+                </div>
+            </div>
+
+            <div class="historial" style="margin-top:24px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                    <h3 style="color:var(--color-primary); font-family: 'Permanent Marker', cursive; margin: 0 0 12px 0; font-size: 1.3em;">Tu Historial de Uso</h3>
+                    <div style="margin-left:auto;">
+                        <button id="clear-profile-results-btn" class="btn" title="Eliminar resultados mostrados en esta sección">Borrar resultados (perfil)</button>
+                    </div>
+                </div>
+                <ul id="historial-list">
+                    <!-- Inicialmente en blanco; se llenará con los resultados del usuario -->
+                </ul>
+            </div>
+
+            <div class="uso">
+                <h3 style="color:var(--color-primary); font-family: 'Permanent Marker', cursive; margin-top:20px; margin-bottom: 12px; font-size: 1.3em;">Frecuencia de Uso</h3>
+                <div class="frecuencia">
+                    <p id="days-used" style="color: var(--text); font-weight: 600; margin: 12px 0;">• Has utilizado la plataforma durante 0 dias en los ultimos 30 dias</p>
+                    <p id="avg-usage" style="color: var(--text); font-weight: 600; margin: 12px 0;">• Promedio de uso: No disponible</p>
+                    <p id="last-access" style="color: var(--text); font-weight: 600; margin: 12px 0;">• Ultimo acceso: Hoy</p>
+                    <p id="total-quizzes" style="color: var(--text); font-weight: 600; margin: 12px 0;">• Total de simulacros realizados: 0</p>
+                </div>
+            </div>
+
+            <div class="historial" style="margin-top:24px;" id="sugerencias-section" style="display:none;">
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                    <h3 style="color:var(--color-primary); font-family: 'Permanent Marker', cursive; margin: 0 0 12px 0; font-size: 1.3em;">Sugerencias Recibidas</h3>
+                    <div style="margin-left:auto;">
+                        <button id="clear-suggestions-btn" class="btn" title="Eliminar sugerencias guardadas">Borrar sugerencias</button>
+                    </div>
+                </div>
+                <ul id="sugerencias-list" style="max-height: 300px; overflow:auto;">
+                    <!-- Se llenará con las sugerencias guardadas -->
+                </ul>
+            </div>
+
+            <div class="botones-contenedor" style="margin-top:22px;">
+                <button class="btn" id="guardar-btn">Guardar Cambios</button>
+                <button class="btn" id="logout-btn">Cerrar Sesion</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Simulador de Exámenes Cecyt 5 "Benito Juárez".</p>
+        </div>
+    </footer>
+
+    <script src="auth.js"></script>
+    <script src="theme.js"></script>
+    <script>
+        (function(){
+            const user = sessionStorage.getItem('user') || localStorage.getItem('user') || null;
+            if(!user) { window.location.href = 'login.html'; return; }
+
+            // Verificar si es el usuario administrador
+            const isAdmin = user === 'simuladordeexamenes1@gmail.com';
+            
+            // Mostrar/ocultar sección de sugerencias según si es admin
+            const sugerenciasSection = document.getElementById('sugerencias-section');
+            if(sugerenciasSection){
+                sugerenciasSection.style.display = isAdmin ? 'block' : 'none';
+            }
+
+            const fotoPerfil = document.getElementById('foto-perfil');
+            const fotoInput = document.getElementById('foto-input');
+            const previewModal = document.getElementById('preview-modal');
+            const previewImg = document.getElementById('preview-img');
+            const confirmPhotoBtn = document.getElementById('confirm-photo');
+            const cancelPhotoBtn = document.getElementById('cancel-photo');
+            const storageKey = 'profilePhoto_' + user;
+            const usageKey = 'userUsage_' + user;
+            const sessionStartKey = 'sessionStart_' + user;
+            let pendingPhotoDataURL = null;
+
+            document.getElementById('usuario').value = user;
+
+            function loadPhoto(){
+                const storedPhoto = localStorage.getItem(storageKey);
+                if(storedPhoto){
+                    fotoPerfil.innerHTML = '<img src="' + storedPhoto + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;cursor:pointer;" />';
+                }
+            }
+            loadPhoto();
+
+            fotoPerfil.addEventListener('click', function(){
+                const storedPhoto = localStorage.getItem(storageKey);
+                if(storedPhoto){
+                    document.getElementById('view-img').src = storedPhoto;
+                    document.getElementById('view-modal').style.display = 'flex';
+                }
+            });
+
+            document.getElementById('camera-btn').addEventListener('click', function(){
+                fotoInput.click();
+            });
+
+            document.getElementById('camera-btn').addEventListener('mouseover', function(){
+                this.style.transform = 'scale(1.1)';
+            });
+
+            document.getElementById('camera-btn').addEventListener('mouseout', function(){
+                this.style.transform = 'scale(1)';
+            });
+
+            document.getElementById('close-view').addEventListener('click', function(){
+                document.getElementById('view-modal').style.display = 'none';
+            });
+
+            document.getElementById('close-view').addEventListener('mouseover', function(){
+                this.style.transform = 'scale(1.15)';
+                this.style.background = 'var(--color-primary-dark)';
+            });
+
+            document.getElementById('close-view').addEventListener('mouseout', function(){
+                this.style.transform = 'scale(1)';
+                this.style.background = 'var(--color-primary)';
+            });
+
+            document.getElementById('view-modal').addEventListener('click', function(e){
+                if(e.target === this){
+                    this.style.display = 'none';
+                }
+            });
+
+            fotoInput.addEventListener('change', function(e){
+                const file = e.target.files[0];
+                if(!file) return;
+                const reader = new FileReader();
+                reader.onload = function(event){
+                    pendingPhotoDataURL = event.target.result;
+                    previewImg.src = pendingPhotoDataURL;
+                    previewModal.style.display = 'flex';
+                };
+                reader.readAsDataURL(file);
+            });
+
+            confirmPhotoBtn.addEventListener('click', function(){
+                if(pendingPhotoDataURL){
+                    localStorage.setItem(storageKey, pendingPhotoDataURL);
+                    fotoPerfil.innerHTML = '<img src="' + pendingPhotoDataURL + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;cursor:pointer;" />';
+                    previewModal.style.display = 'none';
+                    alert('Foto guardada correctamente');
+                }
+            });
+
+            cancelPhotoBtn.addEventListener('click', function(){
+                pendingPhotoDataURL = null;
+                previewModal.style.display = 'none';
+                fotoInput.value = '';
+            });
+
+            function initializeUsageTracking(){
+                const now = new Date();
+                const sessionStart = now.getTime();
+                sessionStorage.setItem(sessionStartKey, sessionStart);
+
+                let usageData = localStorage.getItem(usageKey);
+                if(!usageData){
+                    usageData = JSON.stringify({
+                        lastAccess: now.toISOString(),
+                        dailyAccess: {},
+                        totalSessions: 1
+                    });
+                    localStorage.setItem(usageKey, usageData);
+                } else {
+                    const data = JSON.parse(usageData);
+                    data.lastAccess = now.toISOString();
+                    data.totalSessions = (data.totalSessions || 0) + 1;
+                    localStorage.setItem(usageKey, JSON.stringify(data));
+                }
+            }
+
+            function updateUsageFrequency(){
+                try{
+                    const usageRaw = localStorage.getItem(usageKey);
+                    if(!usageRaw) return;
+                    
+                    const usage = JSON.parse(usageRaw);
+                    const lastAccess = new Date(usage.lastAccess);
+                    const today = new Date();
+                    const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+                    let daysUsedCount = 0;
+                    const dailyAccess = usage.dailyAccess || {};
+                    for(let dateStr in dailyAccess){
+                        const d = new Date(dateStr);
+                        if(d >= thirtyDaysAgo && d <= today) daysUsedCount++;
+                    }
+
+                    const quizzesKey = 'quizResults_' + user;
+                    const quizzesRaw = localStorage.getItem(quizzesKey);
+                    const totalQuizzes = quizzesRaw ? JSON.parse(quizzesRaw).length : 0;
+
+                    let avgText = 'No disponible';
+                    if(daysUsedCount > 0){
+                        let totalMinutes = 0;
+                        for(let dateStr in dailyAccess){
+                            totalMinutes += dailyAccess[dateStr] || 0;
+                        }
+                        const avgMinutesPerDay = Math.round(totalMinutes / daysUsedCount);
+                        const hours = Math.floor(avgMinutesPerDay / 60);
+                        const minutes = avgMinutesPerDay % 60;
+                        if(hours > 0){
+                            avgText = hours + ' hora' + (hours !== 1 ? 's' : '') + ' ' + minutes + ' minutos por día';
+                        } else {
+                            avgText = minutes + ' minutos por día';
+                        }
+                    }
+
+                    const lastAccessStr = lastAccess.toLocaleString('es-ES', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    document.getElementById('days-used').textContent = '• Has utilizado la plataforma durante ' + daysUsedCount + ' dia' + (daysUsedCount !== 1 ? 's' : '') + ' en los ultimos 30 dias';
+                    document.getElementById('avg-usage').textContent = '• Promedio de uso: ' + avgText;
+                    document.getElementById('last-access').textContent = '• Ultimo acceso: ' + lastAccessStr;
+                    document.getElementById('total-quizzes').textContent = '• Total de simulacros realizados: ' + totalQuizzes;
+                }catch(e){ console.error('updateUsageFrequency error', e); }
+            }
+
+            function trackSessionTime(){
+                const sessionStart = parseInt(sessionStorage.getItem(sessionStartKey));
+                if(sessionStart){
+                    const now = new Date();
+                    const elapsed = Math.floor((now.getTime() - sessionStart) / 60000);
+                    
+                    if(elapsed > 0){
+                        const usageRaw = localStorage.getItem(usageKey);
+                        const usage = JSON.parse(usageRaw);
+                        const dateStr = now.toISOString().split('T')[0];
+                        usage.dailyAccess[dateStr] = (usage.dailyAccess[dateStr] || 0) + elapsed;
+                        localStorage.setItem(usageKey, JSON.stringify(usage));
+                        updateUsageFrequency();
+                    }
+                }
+            }
+
+            initializeUsageTracking();
+            updateUsageFrequency();
+
+            window.addEventListener('beforeunload', trackSessionTime);
+            setInterval(updateUsageFrequency, 60000);
+
+            document.getElementById('guardar-btn').addEventListener('click', function(){
+                trackSessionTime();
+                alert('Cambios guardados');
+            });
+
+            document.getElementById('logout-btn').addEventListener('click', function(){
+                trackSessionTime();
+                sessionStorage.removeItem('auth');
+                localStorage.removeItem('auth');
+                sessionStorage.removeItem('user');
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
+            });
+
+            function renderHistorial(){
+                try{
+                    const mainKey = 'quizResults_' + user;
+                    const profileCacheKey = 'quizResults_profileCache_' + user;
+
+                    // Prefer the profile-specific cache so the profile clear button only affects this view
+                    let raw = localStorage.getItem(profileCacheKey);
+                    if(raw === null){
+                        // no cache: read from main storage and populate the cache (full history)
+                        const mainRaw = localStorage.getItem(mainKey);
+                        const arrMain = mainRaw ? JSON.parse(mainRaw) : [];
+                        raw = JSON.stringify(arrMain);
+                        localStorage.setItem(profileCacheKey, raw);
+                    }
+
+                    const arr = raw ? JSON.parse(raw) : [];
+                    const ul = document.getElementById('historial-list');
+                    if(!ul) return;
+                    ul.innerHTML = '';
+                    if(!arr || arr.length === 0){
+                        const li = document.createElement('li');
+                        li.className = 'placeholder';
+                        li.textContent = 'esta parte se actualizara cuando realices tu primer simulador';
+                        ul.appendChild(li);
+                        return;
+                    }
+                    const list = arr.slice().reverse();
+                    list.forEach(item => {
+                        const li = document.createElement('li');
+                        const d = new Date(item.date);
+                        li.textContent = d.toLocaleString() + ' — ' + item.materia + ' — ' + item.correct + '/' + item.total;
+                        ul.appendChild(li);
+                    });
+                }catch(e){ console.error('renderHistorial error', e); }
+            }
+
+            document.addEventListener('DOMContentLoaded', renderHistorial);
+            // Handle storage events: if the main quiz results change, invalidate the profile cache
+            window.addEventListener('storage', function(e){
+                if(!e.key) return;
+                const mainKey = 'quizResults_' + user;
+                const profileCacheKey = 'quizResults_profileCache_' + user;
+                if(e.key === mainKey){
+                    // main data changed (new quiz saved elsewhere) -> invalidate cache so profile shows fresh data
+                    try{ localStorage.removeItem(profileCacheKey); }catch(err){}
+                    renderHistorial();
+                    updateUsageFrequency();
+                    return;
+                }
+                if(e.key === profileCacheKey){
+                    // profile cache changed (maybe cleared via button in another tab)
+                    renderHistorial();
+                }
+            });
+            setInterval(renderHistorial, 2000);
+
+            // Función para renderizar sugerencias recibidas (SOLO PARA ADMIN)
+            function renderSugerencias(){
+                if(!isAdmin) return; // Solo mostrar si es administrador
+                
+                try{
+                    const sugerenciasRaw = localStorage.getItem('sugerencias') || '[]';
+                    const sugerencias = JSON.parse(sugerenciasRaw);
+                    const ul = document.getElementById('sugerencias-list');
+                    if(!ul) return;
+                    ul.innerHTML = '';
+                    
+                    if(!sugerencias || sugerencias.length === 0){
+                        const li = document.createElement('li');
+                        li.className = 'placeholder';
+                        li.textContent = 'No hay sugerencias guardadas. Las sugerencias aparecerán aquí cuando los usuarios las envíen.';
+                        ul.appendChild(li);
+                        return;
+                    }
+                    
+                    const list = sugerencias.slice().reverse();
+                    list.forEach((item, index) => {
+                        const li = document.createElement('li');
+                        const fecha = new Date(item.fecha).toLocaleString('es-ES');
+                        const resumen = `${fecha} — ${item.grupo}${item.comentarios ? ' — ' + item.comentarios.substring(0, 30) + '...' : ''}`;
+                        li.textContent = resumen;
+                        li.style.cursor = 'pointer';
+                        li.style.padding = '12px';
+                        li.style.borderBottom = '2px solid var(--border)';
+                        li.style.color = 'var(--text)';
+                        li.style.fontWeight = '500';
+                        li.style.backgroundColor = 'var(--card-bg)';
+                        li.addEventListener('click', function(){
+                            mostrarDetallesSugerencia(item);
+                        });
+                        ul.appendChild(li);
+                    });
+                }catch(e){ console.error('renderSugerencias error', e); }
+            }
+
+            // Función para mostrar detalles de una sugerencia
+            function mostrarDetallesSugerencia(item){
+                const detalle = `
+                    Grupo: ${item.grupo}
+                    Frecuencia: ${item.frecuencia || 'No especificada'}
+                    Materias complicadas: ${item.materiasComplicadas || 'No especificadas'}
+                    Tipo de examen: ${item.tipoExamen || 'No especificado'}
+                    Dificultad: ${item.dificultad || 'No especificada'}
+                    Motivo: ${item.motivo || 'No especificado'}
+                    Comentarios: ${item.comentarios || 'Sin comentarios'}
+                    Fecha: ${new Date(item.fecha).toLocaleString('es-ES')}
+                `;
+                alert(detalle);
+            }
+
+            renderSugerencias();
+            
+            // Clear button para sugerencias (SOLO PARA ADMIN)
+            (function(){
+                const btn = document.getElementById('clear-suggestions-btn');
+                if(!btn || !isAdmin) return;
+                btn.addEventListener('click', function(){
+                    const sugerenciasRaw = localStorage.getItem('sugerencias');
+                    const hasSugerencias = sugerenciasRaw && JSON.parse(sugerenciasRaw).length > 0;
+                    if(!hasSugerencias){
+                        alert('No hay sugerencias para borrar.');
+                        return;
+                    }
+                    if(!confirm('¿Está seguro de que desea eliminar todas las sugerencias guardadas? Esta acción no se puede deshacer.')) return;
+                    localStorage.setItem('sugerencias', JSON.stringify([]));
+                    renderSugerencias();
+                    alert('Sugerencias eliminadas.');
+                });
+            })();
+
+            // Clear button for profile section (only affects profile cache/view)
+            (function(){
+                const btn = document.getElementById('clear-profile-results-btn');
+                if(!btn) return;
+                btn.addEventListener('click', function(){
+                    const profileCacheKey = 'quizResults_profileCache_' + user;
+                    const mainKey = 'quizResults_' + user;
+                    const rawMain = localStorage.getItem(mainKey);
+                    const hasMain = rawMain && JSON.parse(rawMain).length > 0;
+                    if(!hasMain){
+                        alert('No hay resultados en tu historial para borrar en esta sección.');
+                        return;
+                    }
+                    if(!confirm('¿Eliminar los resultados mostrados en la sección de perfil? Esta acción solo afectará la vista del perfil y no borrará los datos globales.')) return;
+                    // Set an empty array in the profile cache so only this view is cleared
+                    localStorage.setItem(profileCacheKey, JSON.stringify([]));
+                    renderHistorial();
+                });
+            })();
+        })();
+    </script>
+</body>
+</html>
