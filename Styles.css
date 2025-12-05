@@ -1,0 +1,108 @@
+:root {
+    /* Paleta y variables globales */
+    --color-primary: #4b1f7a;
+    --color-primary-dark: #33124f;
+    --bg-page: #f4f4f4;
+    --text: #333333;
+    --card-bg: #ffffff;
+    --border: #2c2222;
+    --th-bg: #4b1f7a;
+    --footer-bg: #333333;
+    --header-text: #ffffff;
+}
+
+/* Base tipografía y fondo general */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-page);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+/* Contenedor centralizado para el contenido principal */
+.container {
+    width: 80%;
+    max-width: 960px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+/* Encabezado y navegación */
+header {
+    background: var(--color-primary);
+    color: var(--header-text);
+    padding: 20px 0;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+header h1 a {
+    color: var(--header-text);
+    text-decoration: none;
+}
+
+/* Ensure h1 text in header is white */
+header h1 {
+    color: var(--header-text);
+}
+
+/* Brand: logo + title */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+#logo-link {
+    display: inline-block;
+}
+
+#site-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    display: block;
+}
+
+nav ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav a {
+    color: var(--header-text);
+    text-decoration: none;
+    font-size: 1.1em;
+}
+
+/* Botón para alternar tema en el header */
+#theme-toggle {
+    background: transparent;
+    border: none;
+    color: var(--header-text);
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+/* Transiciones suaves al cambiar de tema */
+html {
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
