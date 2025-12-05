@@ -1,0 +1,294 @@
+:root {
+    /* Paleta y variables globales */
+    --color-primary: #4b1f7a;
+    --color-primary-dark: #33124f;
+    --bg-page: #f4f4f4;
+    --text: #333333;
+    --card-bg: #ffffff;
+    --border: #2c2222;
+    --th-bg: #4b1f7a;
+    --footer-bg: #333333;
+    --header-text: #ffffff;
+}
+
+/* Base tipografía y fondo general */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-page);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+/* Contenedor centralizado para el contenido principal */
+.container {
+    width: 80%;
+    max-width: 960px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+/* Encabezado y navegación */
+header {
+    background: var(--color-primary);
+    color: var(--header-text);
+    padding: 20px 0;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+header h1 a {
+    color: var(--header-text);
+    text-decoration: none;
+}
+
+/* Ensure h1 text in header is white */
+header h1 {
+    color: var(--header-text);
+}
+
+/* Brand: logo + title */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+#logo-link {
+    display: inline-block;
+}
+
+#site-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    display: block;
+}
+
+nav ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav a {
+    color: var(--header-text);
+    text-decoration: none;
+    font-size: 1.1em;
+}
+
+/* Botón para alternar tema en el header */
+#theme-toggle {
+    background: transparent;
+    border: none;
+    color: var(--header-text);
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+/* Transiciones suaves al cambiar de tema */
+html {
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Variables y paleta específicas para modo oscuro */
+.dark {
+    --color-primary: #1d2e52;
+    --color-primary-dark: #0b3c64;
+    --bg-page: #191c3b;
+    --text: #ffffff;
+    --card-bg: #4a0b7e; /* recuadros más notables pero suaves */
+    --border: #1d2e52;
+    --th-bg: #1d2e52;
+    --footer-bg: #020406;
+    --header-text: #ffffff;
+}
+
+/* Espaciado general entre secciones */
+section {
+    margin: 30px 0;
+}
+
+/* Distribución del simulador: tarjetas responsivas */
+.simulador {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+/* Tarjetas genéricas que envuelven bloques de contenido */
+.seccion {
+    flex: 1;
+    min-width: 300px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: var(--card-bg);
+    border-radius: 5px;
+    box-shadow: 0 6px 18px rgba(2,6,12,0.35);
+}
+
+/* Página Sobre: layout con columna lateral de contacto */
+.sobre-layout {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+.sobre-layout .main-content {
+    flex: 1 1 65%;
+}
+.sobre-layout .aside-contact {
+    flex: 0 0 30%;
+    min-width: 220px;
+}
+.contact-box {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(2,6,12,0.12);
+}
+.contact-box h3 { margin-top: 0; color: var(--color-primary); }
+.contact-box a { color: var(--color-primary-dark); text-decoration: underline; }
+
+@media (max-width: 900px) {
+    .sobre-layout { flex-direction: column; }
+    .sobre-layout .aside-contact { order: 2; }
+}
+
+.seccion:last-child {
+    margin-right: 0;
+}
+
+h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: var(--color-primary);
+}
+
+/* Ensure headings are readable in dark mode */
+/* Titulares en modo oscuro */
+.dark h3 {
+    color: var(--text);
+}
+
+/* Controles de formulario */
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+
+/* Botones principales */
+button {
+    background-color: var(--color-primary);
+    color: var(--header-text);
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: var(--color-primary-dark);
+}
+
+/* Tablas de resultados/listados */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th,
+td {
+    border: 1px solid var(--border);
+    padding: 12px 15px;
+    text-align: left;
+}
+
+th {
+    background-color: var(--th-bg);
+    color: white;
+    font-weight: bold;
+    font-size: 1.1em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Pie de página */
+footer {
+    background: var(--footer-bg);
+    color: var(--header-text);
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 30px;
+}
+
+/* Ajustes globales cuando está activo el modo oscuro */
+.dark body {
+    background-color: var(--bg-page);
+    color: var(--text);
+}
+
+/* Header, nav y footer en modo oscuro */
+.dark header,
+.dark nav,
+.dark footer {
+    background: var(--color-primary);
+    color: var(--header-text);
+}
+
+.dark header h1,
+.dark .brand h1,
+.dark nav a,
+.dark #theme-toggle {
+    color: var(--header-text);
+}
+
+/* Tarjetas en modo oscuro */
+.dark .seccion {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    box-shadow: 0 6px 20px rgba(2,6,12,0.55);
+}
+
+/* Tablas en modo oscuro */
+.dark table {
+    background: transparent;
+    color: var(--text);
+}
+
+.dark th {
+    background-color: var(--th-bg);
+    color: var(--text);
+}
+
+.dark td {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--border);
+}
