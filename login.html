@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="container">
+        <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
+            <button id="theme-toggle" aria-label="Cambiar tema">☀️</button>
+        </div>
+        <h2>Iniciar Sesión</h2>
+        <form id="login-form">
+            <label for="email">Correo Electrónico</label>
+            <input id="email" name="email" type="email" required placeholder="Ingresa tu correo electrónico">
+            <label><input type="checkbox" id="remember"> Recordarme</label>
+            <div style="margin-top:10px;">
+                <button type="submit">Entrar</button>
+            </div>
+            <p id="msg" style="color:red"></p>
+            <p style="margin-top:8px;">Ingresa tu correo para acceder. Si es la primera vez, se creará una nueva cuenta.</p>
+        </form>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Simulador de Exámenes Cecyt 5 "Benito Juárez".</p>
+        </div>
+    </footer>
+
+    <script src="auth.js"></script>
+    <script src="theme.js"></script>
+    <script>
+        (function(){
+            function getParam(name){
+                const p = new URLSearchParams(window.location.search);
+                return p.get(name);
+            }
+            const form = document.getElementById('login-form');
+            const msg = document.getElementById('msg');
+
+            // Prefill email if remembered
+            try{
+                const remembered = localStorage.getItem('user') || sessionStorage.getItem('user');
+                if(remembered){ document.getElementById('email').value = remembered; document.getElementById('remember').checked = !!localStorage.getItem('user'); }
+            }catch(e){ }
+
+            form.addEventListener('submit', function(e){
+                e.preventDefault();
+                const email = document.getElementById('email').value.trim();
+                const r = document.getElementById('remember').checked;
+                if(!window.Auth){ msg.textContent = 'Error: auth no disponible'; return; }
+                const ok = window.Auth.login(email, r);
+                if(!ok){ msg.textContent = 'Correo inválido.'; return; }
+                const next = getParam('next') || 'index.html';
+                window.location.href = next;
+            });
+        })();
+    </script>
+</body>
+</html>
